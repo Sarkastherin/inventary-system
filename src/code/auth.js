@@ -38,8 +38,9 @@ function gisLoaded() {
     maybeEnableButtons();
 }
 
-function maybeEnableButtons() {
+async function maybeEnableButtons() {
     if (gapiInited && gisInited) {
+        await handleAuthClick()
         btn_auth.removeAttribute('hidden')
     }
 }
@@ -52,7 +53,10 @@ function handleAuthClick() {
         btn_sigout.removeAttribute('hidden')
         btn_auth.innerText = 'Refresh';
         let form = document.querySelector('form')
-        form.removeAttribute('hidden')
+        if(form){
+            form.removeAttribute('hidden')
+        }
+        
         await loadedWindow();
     };
     /* The trap */

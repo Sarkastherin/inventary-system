@@ -7,10 +7,10 @@ let inputCantidadMano = document.getElementById('cantidad_mano');
 let dataFormMov = new Object();
 let id;
 let headersOfMov;
-let lotesPositivos = new Array()
+let allLotes = new Array()
 
 /* Carga datos y recursos necesarios para la inicialización
- - Lotes para consumo (>0)
+ - Todos los lotes como data list
  - Usuarios
  - id
  - Encabezados de la hoja Movimientos*/
@@ -19,16 +19,15 @@ async function loadedWindow() {
     try {
         let data = await loadedResourses(rangoMovimientos);
         let loteForConsume = data.map(item => item[3]);
+        loteForConsume.shift()
         let loteUnique = [...new Set(loteForConsume)];
         for (lote of loteUnique){
             let arr = data.filter(item=>{return item[3]==lote});
             arr = arr.map(item=>{return Number(item[4])})
-            let cantidadOfLote = sumarArray(arr);
-            if(cantidadOfLote>0){
-              lotesPositivos.push([lote,sumarArray(arr)])
-            }
+            //let cantidadOfLote = sumarArray(arr);
+            allLotes.push([lote,sumarArray(arr)])
           }
-          lotesPositivos.map(item => {
+          allLotes.map(item => {
             let node = document.createElement("option");
             let textnode = document.createTextNode(item[0]);
             node.setAttribute('value', item[0])
@@ -68,7 +67,7 @@ async function loadedWindow() {
 /* Cargar las características del lote al ingresar el codigo*/
 inputLote.addEventListener('change', loadProductos)
 async function loadProductos() {
-    let loteAConsumir = lotesPositivos.filter(item => item[0] == inputLote.value);
+    let loteAConsumir = allLotes.filter(item => item[0] == inputLote.value);
     inputCantidadMano.value = loteAConsumir[0][1]
     try {
         let data = await loadedResourses(rangoLotes);
@@ -102,12 +101,15 @@ async function saveConsumo() {
     dataFormMov = {
         id: id.toString(),
         fecha: getDate(),
-        tipo: 'Consumo',
+        tipo: 'Actualización',
+        tipo_orden: 'Control de stock',
+        id_orden: '0',
+        maquina_corte: 'N/A'
     }
     /* ubica todos los input con la clase .save y guarda el valor y clave (id) en el objeto dataForm */
     let arr = form.querySelectorAll('.save');
     arr.forEach(elem => dataFormMov[elem.id] = elem.value);
-    dataFormMov['cantidad'] = -dataFormMov.cantidad
+    dataFormMov['cantidad'] = dataFormMov.cantidad - dataFormMov.cantidad_mano
     /* Convieret los datos del Obj. dataForm en u array con el orden de la tabla LOTES */
     transformData(dataFormMov, headersOfMov)
     /* Petición POST */

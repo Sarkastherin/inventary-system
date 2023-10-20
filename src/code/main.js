@@ -10,7 +10,7 @@ const rangoMovimientos = "MOVIMIENTOS!A:L";
 const hojaLote = "LOTES"
 window.addEventListener('load', loadNavbar);
 function loadNavbar() {
-    navbar.innerHTML = `
+  navbar.innerHTML = `
     <div class="me-auto p-2">
       <a class="navbar-brand text-light" id="link_inicio" href="./index.html">
       <img class="img-brand" src="./assets/icons/logo.png" alt="Logo" class="d-inline-block align-text-center">
@@ -36,9 +36,9 @@ function loadNavbar() {
                   <a class="nav-link" aria-current="page" id="link_actualizacion" href="./actualizacion.html">Actualización</a>
                 </li>
                 <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Consultas</a>
+                  <a class="nav-link dropdown-toggle" href="#" role="button" id="link_consultas" data-bs-toggle="dropdown" aria-expanded="false">Consultas</a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" id="link_lotes" href="#" target="_blank">Lotes</a></li>
+                    <li><a class="dropdown-item" id="link_lotes" href="./lotes.html">Lotes</a></li>
                     <li><a class="dropdown-item" id="link_movimientos" href="#" target="_blank">Movimientos</a></li>
                     <li><a class="dropdown-item" id="link_stock_lote" href="#" target="_blank">Stock por lote</a></li>
                     <li><a class="dropdown-item" id="link_stock_codigo" href="#" target="_blank">Stock por código</a></li>
@@ -48,26 +48,25 @@ function loadNavbar() {
             </div>
           </div>
         </div>` ;
-        let linkActive = document.getElementById(`link_${nameIdModule}`);
-        linkActive.classList.add('active')
+  let linkActive = document.getElementById(`link_${nameIdModule}`);
+  linkActive.classList.add('active')
 }
 async function loadedResourses(range) {
   let response;
   try {
-      response = await gapi.client.sheets.spreadsheets.values.get({
-          spreadsheetId: spreadsheetId,
-          range: range,
-        });
-        let data = response.result.values
-        return data
+    response = await gapi.client.sheets.spreadsheets.values.get({
+      spreadsheetId: spreadsheetId,
+      range: range,
+    });
+    let data = response.result.values
+    return data
   } catch (e) {
-      let code = e.result.error.code
-      error_400(code)
+    let code = e.result.error.code
+    error_400(code)
   }
 }
-
 function validated(event, form) {
-  if(form.checkValidity()) {
+  if (form.checkValidity()) {
     event.preventDefault()
   }
   form.classList.add('was-validated')
@@ -76,12 +75,11 @@ function validated(event, form) {
 function getDate() {
   let date = new Date();
   let day = date.getDate();
-  let month = date.getMonth() + 1 ;
+  let month = date.getMonth() + 1;
   let year = date.getFullYear()
   let today = `${day}/${month}/${year}`;
   return today
 }
-
 async function postData(range, data) {
   let response;
   try {
@@ -102,18 +100,18 @@ async function postData(range, data) {
       }
     })
     console.log(response)
-    if(response.status==200){
+    if (response.status == 200) {
       return true
     }
-    else {return false}
+    else { return false }
   } catch (e) {
     console.log(e)
-      let code = e.result.error.code
-      error_400(code)
-    }
+    let code = e.result.error.code
+    error_400(code)
+  }
 }
 function error_400(code) {
-  if(code.toString().startsWith('4')){
+  if (code.toString().startsWith('4')) {
     alert('Tenemos problemas con la App ❌, Comunicate con el desarrollador')
   }
 }
@@ -132,7 +130,7 @@ async function createdData(obj, row, sheet, range) {
   let response = await loadedResourses(range);
   let headers = response.shift();
   for (item in obj) {
-    obj[item] = [obj[item],`${sheet}!R${row}C${headers.indexOf(item)+1}`]  
+    obj[item] = [obj[item], `${sheet}!R${row}C${headers.indexOf(item) + 1}`]
   }
   let data = new Array();
   for (item in obj) {
@@ -157,28 +155,32 @@ async function updateData(data) {
       }
     })
     console.log(response)
-    if(response.status==200){
+    if (response.status == 200) {
       return true
     }
-    else {return false}
+    else { return false }
   } catch (e) {
     console.log(e)
-  }}
-
+  }
+}
 function reload() {
-  setTimeout(() => {location.reload()}, "2000");
+  setTimeout(() => { location.reload() }, "2000");
 }
 function badRequest() {
   alert('bad request')
 }
 function transformData(obj, arr) {
-  for(item in obj) {
-      if(arr.includes(item)){
-          arr[arr.indexOf(item)] = obj[item]
-      }
+  for (item in obj) {
+    if (arr.includes(item)) {
+      arr[arr.indexOf(item)] = obj[item]
+    }
   }
   return arr
 }
 function sumarArray(array) {
   return array.reduce((acumulador, elemento) => acumulador + elemento, 0);
+}
+function convertirMayusculas(event) {
+  var texto = event.target.value;
+  event.target.value = texto.toUpperCase();
 }
