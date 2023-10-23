@@ -1,24 +1,34 @@
 let tbody = document.getElementById('top_ten');
-let allLotes = new Array();
-let lotesPositivos = new Array()
+let stockByLote = new Object()
 
 async function loadedWindow() {
     tbody.innerHTML = '<option selected disabled value=""></option>';
     let data
     try {
         data = await loadedResourses(rangoMovimientos);
-        let lotesAndQuantity = data.map(item => item[3]);
-        lotesAndQuantity.shift();
-        let loteUnique = [...new Set(lotesAndQuantity)];
-        for (let lote of loteUnique) {
-            let arr = data.filter(item => { return item[3] == lote });
-            arr = arr.map(item => { return Number(item[4]) })
-            let cantidadOfLote = sumarArray(arr);
-            if (cantidadOfLote > 0) {
-                lotesPositivos.push([lote, sumarArray(arr)])
+        data.shift()
+        for (let mov of data) {
+            if(stockByLote.hasOwnProperty(mov[3])){
+                stockByLote[mov[3]][4] = Number(mov[4])+Number(stockByLote[mov[3]][4])
+            }
+            else {
+               stockByLote[mov[3]] = mov
             }
         }
-        console.log(lotesPositivos)
+        for (let lote in stockByLote) {
+            if(stockByLote[lote][4]>0){
+               tbody.innerHTML += `
+                <tr>
+                    <th>${lote}</th>
+                    <td>${stockByLote[lote][5]}</td>
+                    <td>${stockByLote[lote][6]}</td>
+                    <td>${stockByLote[lote][4]}</td>
+                </tr>
+            ` 
+            }
+        }
+        
+        
     } catch (e) {
         console.log(e)
         let code = e.result.error.code
