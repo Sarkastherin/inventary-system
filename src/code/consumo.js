@@ -7,7 +7,8 @@ let inputCantidadMano = document.getElementById('cantidad_mano');
 let dataFormMov = new Object();
 let id;
 let headersOfMov;
-let lotesPositivos = new Array()
+let lotesPositivos = new Array();
+let productos;
 
 /* Carga datos y recursos necesarios para la inicialización
  - Lotes para consumo (>0)
@@ -16,6 +17,11 @@ let lotesPositivos = new Array()
  - Encabezados de la hoja Movimientos*/
 async function loadedWindow() {
     inputLote.innerHTML = '<option selected disabled value=""></option>'
+    try {
+        productos = await loadedResourses(rangoProductos);
+    } catch (e) {
+        console.log(e)
+    }
     try {
         let data = await loadedResourses(rangoMovimientos);
         let loteForConsume = data.map(item => item[3]);
@@ -74,7 +80,8 @@ async function loadProductos() {
         let data = await loadedResourses(rangoLotes);
         let loteAConsumir = data.filter(item => item[3] == inputLote.value);
         inpuCodigo.value = loteAConsumir[0][4];
-        inputNombreProducto.value = loteAConsumir[0][5];
+        let descripcion = productos.filter(item => {return item[0]==loteAConsumir[0][4]})
+        inputNombreProducto.value = descripcion[0][1];
     } catch (e) {
         console.log(e)
         let code = e.result.error.code
@@ -90,7 +97,7 @@ form.addEventListener('submit', async event => {
             modalShow('Requerimiento no completado ❌', 'No se han podido guardar los datos')
         }
         else {
-            modalShow('Requerimiento completado ✅', '¡Se ha descontado '+ 0 +' el lote ' + lote)
+            modalShow('Requerimiento completado ✅', '¡Se ha descontado '+ lote[1] +' el lote ' + lote[0])
             reload()
         }
     }
@@ -116,7 +123,7 @@ async function saveConsumo() {
         badRequest();
     }
     else { 
-        return dataFormMov.lote
+        return [dataFormMov.lote, dataFormMov.cantidad]
     }
 }
 

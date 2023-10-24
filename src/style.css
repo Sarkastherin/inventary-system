@@ -51,3 +51,8 @@
   .container-link a {
     box-shadow: 0px 0px 30px 10px rgb(222, 195, 73);
   }
+  .container-mobil{
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+  }

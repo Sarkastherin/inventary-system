@@ -14,22 +14,33 @@ async function loadedWindow() {
     inputProveedores.innerHTML = '<option selected disabled value=""></option>'
     tbody.innerHTML = '';
     try {
+        productos = await loadedResourses(rangoProductos);
+    } catch (e) {
+        console.log(e)
+    }
+    try {
         let data = await loadedResourses(rangoLotes);
         nameColLotes = data.shift()
         //Definiendo id
-        id = createdId(data)/* data.map(item => Number(item[0]))
-        id = Math.max(...id) + 1 */
+        id = createdId(data)
         //Obteniedo una lista de los lotes
         loteValues = data.map(item => item[3])
         //Creando tabla que muestra los ultimos 10 lotes creados
         let lastLoteCreated = data.splice(data.length-10,data.length);
+        for(lote of lastLoteCreated) {
+            productos.map(item => {
+                if(item[0] == lote[4]) {
+                    lote.push(item[1])
+                }
+            })
+        }
         lastLoteCreated.reverse().forEach(elem => {
             tbody.innerHTML += `
             <tr>
                 <th>${elem[0]}</th>
                 <td>${elem[3]}</td>
                 <td>${elem[4]}</td>
-                <td>${elem[5]}</td>
+                <td>${elem[14]}</td>
             </tr>
             `
           });

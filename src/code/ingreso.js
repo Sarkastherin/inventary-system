@@ -13,6 +13,7 @@ let dataFormLote = new Object();
 let id;
 let headersOfMov;
 let indexOfLote;
+let productos;
 
 /* Carga datos y recursos necesarios para la inicialización
  - Datos de la tabla
@@ -23,8 +24,13 @@ async function loadedWindow() {
     inputLote.innerHTML = '<option selected disabled value=""></option>'
     tbody.innerHTML = '';
     try {
+        productos = await loadedResourses(rangoProductos);
+    } catch (e) {
+        console.log(e)
+    }
+    try {
         let data = await loadedResourses(rangoLotes);
-        let loteInAlta = data.filter(item => item[14] == 'Alta');
+        let loteInAlta = data.filter(item => item[13] == 'Alta');
         if (loteInAlta.length == 0) {
             form.innerHTML = `
             <div class="alert alert-warning" role="alert">
@@ -32,13 +38,20 @@ async function loadedWindow() {
             </div>`
         }
         else {
+            for (lote of loteInAlta) {
+                productos.map(item => {
+                    if(item[0] == lote[4]) {
+                        lote.push(item[1])
+                    }
+                })
+            }
             loteInAlta.reverse().forEach(elem => {
                 tbody.innerHTML += `
             <tr>
                 <th>${elem[0]}</th>
                 <td>${elem[3]}</td>
                 <td>${elem[4]}</td>
-                <td>${elem[5]}</td>
+                <td>${elem[14]}</td>
             </tr>
             `
             })
@@ -87,9 +100,10 @@ async function loadProductos() {
         indexOfLote = data.indexOf(loteAIngresar[0]) + 1
         loteAIngresar = loteAIngresar[0]
         inpuCodigo.value = loteAIngresar[4];
-        inputNombreProducto.value = loteAIngresar[5];
-        inputAnchoAc.value = loteAIngresar[9];
-        inputLargoAc.value = loteAIngresar[10];
+        let descripcion = productos.filter(item => {return item[0]==loteAIngresar[4]})
+        inputNombreProducto.value = descripcion[0][1];
+        inputAnchoAc.value = loteAIngresar[8];
+        inputLargoAc.value = loteAIngresar[9];
     } catch (e) {
         let code = e.result.error.code
         error_400(code)

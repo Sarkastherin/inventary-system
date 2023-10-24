@@ -39,9 +39,9 @@ function loadNavbar() {
                   <a class="nav-link dropdown-toggle" href="#" role="button" id="link_consultas" data-bs-toggle="dropdown" aria-expanded="false">Consultas</a>
                   <ul class="dropdown-menu">
                     <li><a class="dropdown-item" id="link_lotes" href="#">Lotes</a></li>
-                    <li><a class="dropdown-item" id="link_movimientos" href="#" target="_blank">Movimientos</a></li>
-                    <li><a class="dropdown-item" id="link_stock_lote" href="./lotes.html">Stock por lote</a></li>
-                    <li><a class="dropdown-item" id="link_stock_codigo" href="./codigo.html">Stock por código</a></li>
+                    <li><a class="dropdown-item" id="link_movimientos" href="./movimientos.html">Movimientos</a></li>
+                    <li><a class="dropdown-item" id="link_stock_lote" href="./stock_lotes.html">Stock por lote</a></li>
+                    <li><a class="dropdown-item" id="link_stock_codigo" href="./stock_codigo.html">Stock por código</a></li>
                   </ul>
                 </li>
               </ul>
