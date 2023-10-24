@@ -38,10 +38,10 @@ function loadNavbar() {
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" role="button" id="link_consultas" data-bs-toggle="dropdown" aria-expanded="false">Consultas</a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" id="link_lotes" href="./lotes.html">Lotes</a></li>
+                    <li><a class="dropdown-item" id="link_lotes" href="#">Lotes</a></li>
                     <li><a class="dropdown-item" id="link_movimientos" href="#" target="_blank">Movimientos</a></li>
-                    <li><a class="dropdown-item" id="link_stock_lote" href="#" target="_blank">Stock por lote</a></li>
-                    <li><a class="dropdown-item" id="link_stock_codigo" href="#" target="_blank">Stock por código</a></li>
+                    <li><a class="dropdown-item" id="link_stock_lote" href="./lotes.html">Stock por lote</a></li>
+                    <li><a class="dropdown-item" id="link_stock_codigo" href="./codigo.html">Stock por código</a></li>
                   </ul>
                 </li>
               </ul>
@@ -183,4 +183,16 @@ function sumarArray(array) {
 function convertirMayusculas(event) {
   var texto = event.target.value;
   event.target.value = texto.toUpperCase();
+}
+function createCSVfile(data,headers) {
+data.unshift(headers)
+const csvContent = data.map(row => row.join(",")).join("\n");
+// Crea un objeto Blob
+const blob = new Blob([csvContent], { type: "text/csv" });
+// Crea una URL para el Blob
+const url = URL.createObjectURL(blob);
+// Crea un enlace de descarga
+let a = document.querySelector('.link_csv');
+a.href = url;
+
 }

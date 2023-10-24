@@ -1,13 +1,12 @@
 let tbody = document.getElementById('top_ten');
 var filtro = {
-    input_lote: '',
     input_espesor: '',
     input_codigo: ''
 }
 let body = document.querySelector('body');
-let headers = ['Lote','Codigo', 'Descripcion', 'Espesor', 'Cantidad'];
+let headers = ['Codigo', 'Descripcion', 'Espesor', 'Cantidad'];
 async function loadedWindow() {
-    let stockByLote = new Object();
+    let stockByCodigo = new Object();
     let array = new Array();
     tbody.innerHTML = '';
     let productos;
@@ -21,25 +20,25 @@ async function loadedWindow() {
         data = await loadedResourses(rangoMovimientos);
         data.shift();
         for (let mov of data) {
-            if (stockByLote.hasOwnProperty(mov[3])) {
-                stockByLote[mov[3]][0] = Number(mov[4]) + Number(stockByLote[mov[3]][0])
+            if (stockByCodigo.hasOwnProperty(mov[5])) {
+                stockByCodigo[mov[5]][0] = Number(mov[4]) + Number(stockByCodigo[mov[5]][0])
             }
             else {
-                stockByLote[mov[3]] = [mov[4], mov[5]];
+                stockByCodigo[mov[5]] = [mov[4], mov[5]];
                 productos.map(item => {
                     if (item[0] == mov[5]) {
-                        stockByLote[mov[3]].push(item[1], item[2])
+                        stockByCodigo[mov[5]].push(item[1], item[2])
                     }
                 })
             }
         }
-        for (let lote in stockByLote) {
-            if (stockByLote[lote][0] > 0) {
-                array.push([lote, stockByLote[lote][1], stockByLote[lote][2], stockByLote[lote][3], stockByLote[lote][0]]);
+        for (let cod in stockByCodigo) {
+            if (stockByCodigo[cod][0] > 0) {
+                array.push([cod, stockByCodigo[cod][2], stockByCodigo[cod][3], stockByCodigo[cod][0]]);
             }
         }
         array = array.filter(item => {
-            if (item[0].includes(filtro.input_lote) && item[1].includes(filtro.input_codigo) && item[3].includes(filtro.input_espesor)) {
+            if (item[0].includes(filtro.input_codigo) && item[2].includes(filtro.input_espesor)) {
                  return item
              }
          });
@@ -50,10 +49,9 @@ async function loadedWindow() {
                     <td>${item[1]}</td>
                     <td>${item[2]}</td>
                     <td>${item[3]}</td>
-                    <td>${item[4]}</td>
                 </tr>`
         });
-        createCSVfile(array, headers);
+        createCSVfile(array,headers);
         if(!tbody.hasChildNodes()) {
             let node = `
             <div class="alert alert-info" role="alert">
