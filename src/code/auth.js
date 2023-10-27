@@ -39,7 +39,6 @@ function gisLoaded() {
 
 async function maybeEnableButtons() {
     if (gapiInited && gisInited) {
-        await handleAuthClick()
         btn_auth.removeAttribute('hidden')
     }
 }
