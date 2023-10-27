@@ -56,3 +56,22 @@
     margin: auto;
     padding: 20px;
   }
+  .container-cards{
+    padding-top: 50px;
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+  .card-img{
+    width: 180px;
+    margin: auto;
+  }
+  .card-img img {
+    width: 100%;
+  }
+  .card {
+    width: 290px;
+  }
